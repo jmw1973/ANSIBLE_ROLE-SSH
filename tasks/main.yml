@@ -1,0 +1,16 @@
+---
+- name: SSH Server Installed
+  yum:
+    name: openssh-server
+    state: latest
+
+- name: SSH Allow Groups
+  register: ssh_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "AllowGroups {{ ssh_allow_group }}"
+
+- name: Reload SSH
+  when: ssh_config.changed == true
+  service:
+    name: sshd
